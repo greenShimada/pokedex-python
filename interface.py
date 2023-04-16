@@ -42,6 +42,7 @@ frameBaixo.grid(row=2, column=0)
 # POSICIONANDO O "MONITOR" DA POKEDEX
 visor = Image.open('pokeW.jpg')
 visor = visor.resize((400, 397))
+visor.save('visorresized.jpg')
 visor = ImageTk.PhotoImage(visor)
 teste = Label(frameMeio, image=visor)
 teste.place(y=0, x=0)
@@ -57,6 +58,7 @@ def diminuirImagem(img):
 def procurar():
     global poke_img                                                 # SE NÃO FOR GLOBAL, A IMAGEM NÃO É RECONHECIDA APÓS O FIM DA FUNÇÃO
     palavra = e_palavra.get()                                       # RECEBE O QUE FOI DIGITADO NO INPUT
+    palavra = palavra.lower()                                       # PADRONIZA NO MINUSCULO
     api_link = f'https://pokeapi.co/api/v2/pokemon/{palavra}'       # ACESSA A API COM O NOME DO POKEMON DIGITADO
     r = requests.get(api_link)
     if r.status_code != 200:
@@ -69,21 +71,21 @@ def procurar():
     diminuirImagem('poke.png')                                      # FUNÇÃO QUE RETIRA O FUNDO PRETO E DEIXA O MENOR POSSÍVEL
 
     poke_img = Image.open(poke_img[0])                              # PRECISA DO [0] PORQUE É UMA TUPLA ONDE O SEGUNDO ITEM É O CABEÇALHO DO RETORNO HTTP
-    altura, largura = poke_img.size
-    altura_nova = altura*3
-    largura_nova = largura*3
-    poke_img = poke_img.resize((altura_nova, largura_nova))
-    poke_img = ImageTk.PhotoImage(poke_img)
-    poke_img_ready = Label(frameMeio, image=poke_img, bg='#ffffff')
+    largura, altura = poke_img.size                                 # VALORES DE ALTURA E LARGURA DA IMAGEM ORIGINAL
+    print(poke_img)
+    altura_nova = altura*3                                          # MULTIPLICA EM 3 O TAMANHO DA IMAGEM
+    largura_nova = largura*3                                        #
+    poke_img = poke_img.resize((largura_nova, altura_nova))         # REDIMENSIONA MANTENDO AS PROPORÇÕES
+    poke_img = ImageTk.PhotoImage(poke_img)                         # TRANSFORMA EM UM FORMATO COMPATIVEL COM O TKINTER
+    poke_img_ready = Label(frameMeio, image=poke_img, bg='#ffffff') # POSICIONA NO FRAME DO MEIO
 
-    poke_img_ready.place(x=( (int(x)/2) - (largura_nova/2)), y = 20 + (altura_nova//2))        # MAIOR POKEMON OCUPA 80 PIXEIS EM Y
+    poke_img_ready.place(x = 180 - (largura_nova / 2) + 10, y = 120 - (altura_nova // 2 ) + 20   )
+    # 180 É METADE DE 360, QUE É O TAMANHO DO VISOR (SÓ A PARTE BRANCA)
+    # O 10 SOMADO EM X É PRA COMPENSAR A PEQUENA BORDA MAIS ESCURA QUE SÓ TEM DO LADO ESQUERDO
+    # 120 É METADE DE 240, QUE É A LARGURA DO VISOR (SÓ A PARTE BRANCA)
+    # O 20 SOMADO É PARA COMPENSAR A BORDA DE CIMA QUE TEM EXATAMENTE 20 PIXEIS. ELA É PRA IMPEDIR QUE OS SPRITES GRANDES SEJAM PROJETADOS EM CIMA DA BORDA DO VISOR
 
-    abilities = []
-    for ability in dados['abilities']:
-        abilities.append(ability['ability']['name'])
-    habilidades = ("Habilidades:", ", ".join(abilities))
-    tk_hab = Label(frameMeio, text=habilidades, font='Ivy 9', bg='#ffffff')
-    tk_hab.place(x=30, y=300)
+
 
 # CRIANDO A LABEL COM O TEXTO
 l_palavra = Label(frameCima, text='Digite o nome de um pokemon', height=1, anchor=NW, font='Ivy 11', bg=vermelho, fg=cinza_claro)
