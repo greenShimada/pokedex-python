@@ -1,15 +1,64 @@
 from tkinter import *
 from tkinter import Tk
-from PIL import Image, ImageTk
+from PIL import Image, ImageTk, ImageSequence
 import urllib.request
 import requests
 import json
-
+import math
 
 
 class Pesquisador_Pokemon():
     def __init__(self, nome_pokemon):
         self.nome = nome_pokemon.lower()
+
+
+    def retorna_gif_sem_fundo(self):
+        lista_pokemon = list()
+        gif_novo = list()
+        gif_path = './img/poke.gif'
+        gif = Image.open(gif_path)
+        largura_or, altura_or = gif.size
+        largura = largura_or * 3
+        altura = altura_or * 3
+
+        fundo = Image.open('./bg/visorTerra.png')
+        crop = [
+            math.floor(200 - (largura / 2)),
+            20,
+            math.floor(200 + (largura / 2)) ,
+            20 + altura
+        ]
+        fundo = fundo.crop((
+            crop[0],
+            crop[1],
+            crop[2],
+            crop[3]
+
+        ))
+        fundo = fundo.convert("RGBA")
+        print(fundo.size)
+
+
+        for frame in range(gif.n_frames):
+            gif.seek(frame)
+            atual = gif.copy()
+            atual = atual.convert("RGBA")
+            atual = atual.resize((
+                largura,
+                altura
+            ))
+
+
+            imagem_final = Image.alpha_composite(fundo, atual)
+            lista_pokemon.append(imagem_final)
+
+        for imagem in lista_pokemon:
+            gif_novo.append(imagem.copy())
+
+        gif_novo[0].save("./img/poke.gif", format="GIF", save_all=True, append_images=gif_novo,
+                 duration=50, loop=0)
+
+
 
     def pegar_url(self, nome_pokemon):
         url = f'https://pokeapi.co/api/v2/pokemon/{nome_pokemon}'

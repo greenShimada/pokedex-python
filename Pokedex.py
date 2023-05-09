@@ -26,11 +26,13 @@ class Pokedex():
         frameBaixo.grid(row=2, column=0)
 
         global visor
-        visor = Image.open('visorresized.jpg')
+
+        visor = Image.open('./bg/visorTerra.png')
         #visor = visor.resize((400, 397))
         visor = ImageTk.PhotoImage(visor)
         teste = Label(self.frameMeio, image=visor)
         teste.place(y=0, x=0)
+
 
         # CRIANDO A LABEL COM O TEXTO
         l_palavra = Label(frameCima, text='Digite o nome de um pokemon', height=1, anchor=NW, font='Ivy 11',
