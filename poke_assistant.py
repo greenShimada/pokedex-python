@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import Tk
+from Pokedex import *
 from PIL import Image, ImageTk, ImageSequence
 import urllib.request
 import requests
@@ -11,8 +11,18 @@ class Pesquisador_Pokemon():
     def __init__(self, nome_pokemon):
         self.nome = nome_pokemon.lower()
 
+    def altera_fundo(self,bg, Pokedex_obj):
+        global n
+        global m
+        n = Image.open(bg)
+        n = ImageTk.PhotoImage(n)
+        m = Pokedex_obj.visorobj
+        m.configure(image=n)
 
-    def retorna_gif_sem_fundo(self):
+        m = Pokedex_obj.visorobj2
+        m.configure(image=n)
+
+    def retorna_gif_sem_fundo(self, bg):
         lista_pokemon = list()
         gif_novo = list()
         gif_path = './img/poke.gif'
@@ -21,12 +31,12 @@ class Pesquisador_Pokemon():
         largura = largura_or * 3
         altura = altura_or * 3
 
-        fundo = Image.open('./bg/visorTerra.png')
+        fundo = Image.open(bg)
         crop = [
             math.floor(200 - (largura / 2)),
-            20,
+            330 - altura,
             math.floor(200 + (largura / 2)) ,
-            20 + altura
+            330
         ]
         fundo = fundo.crop((
             crop[0],
@@ -58,8 +68,6 @@ class Pesquisador_Pokemon():
         gif_novo[0].save("./img/poke.gif", format="GIF", save_all=True, append_images=gif_novo,
                  duration=50, loop=0)
 
-
-
     def pegar_url(self, nome_pokemon):
         url = f'https://pokeapi.co/api/v2/pokemon/{nome_pokemon}'
         return url
@@ -86,7 +94,6 @@ class Pesquisador_Pokemon():
     def retorna_tipos(self, json):
         tipos = [tipo["type"]["name"].capitalize() for tipo in json["types"]]
         return tipos
-
 
     def retorna_gif(self, url_gif):
         return urllib.request.urlretrieve(url_gif, './img/poke.gif')
