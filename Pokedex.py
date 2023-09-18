@@ -66,4 +66,4 @@ class Pokemon():
             self.url_gif = url_gif
 
 
-pass
+

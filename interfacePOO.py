@@ -12,6 +12,7 @@ def exibir(pokemon):
     str = '\n'
     controle_altura = 45
     label_nome = Pokedex_obj.labelNome
+    
     label_nome.configure(text='')
     label_nome.configure(text='NOME: ' + pokemon.nome.title())
 
@@ -19,6 +20,7 @@ def exibir(pokemon):
     label_habilidades.configure(text='')
 
     label_nome.place(x=15, y=20)
+
     label_habilidades.place(x=15, y=45)
     for i in pokemon.habilidades:
         str = str + i + " "
